@@ -1,27 +1,33 @@
 # Smart Footwear Safety System 🛡️👟
 
-A wearable IoT safety device integrated into footwear designed to provide immediate assistance in emergency situations. It features GPS tracking, video evidence recording, and a dual-stage escalation alert system.
+An advanced, IoT-based wearable safety device integrated into footwear, designed to provide immediate, failsafe assistance in emergency situations. 
 
-## Features
-* **Panic Button Trigger:** One-press activation.
+## Core Architecture
+This system utilizes **Dual-Core Processing (FreeRTOS)** on the ESP32 to ensure critical safety sensors are never blocked by network latency.
+* **Core 0 (Hardware Watchdog):** Dedicated entirely to monitoring the Piezoelectric impact sensor. It runs continuously, immune to Wi-Fi drops or GPS delays.
+* **Core 1 (Comms & Logic):** Handles Telegram API communication, GPS parsing, and Camera triggering.
+
+## Failsafe Features
+* **Smart Location Fallback:** If the GPS module cannot acquire a satellite lock (e.g., indoors), the system automatically falls back to an IP-based Geolocation network estimate.
+* **Dual-Stage Escalation:** Alerts the Guardian first. If the Guardian does not reply "SAFE" within 45 seconds, it automatically escalates the alert and GPS coordinates to Police/Authorities.
 * **Continuous Alarm:** Loud buzzer (Pin 23) activates immediately to deter attackers.
-* **Live GPS Tracking:** Sends real-time Google Maps location to a Guardian.
-* **Evidence Recording:** Wirelessly triggers an ESP32-CAM to record 30s of video to SD card.
-* **Escalation Logic:** If the Guardian does not reply "SAFE" within 45 seconds, a second alert with GPS is sent to the Authorities (Police).
-* **Self-Sustaining:** Powered by Piezoelectric Energy Harvesting crystals in the sole.
+* **Video Evidence:** Wirelessly triggers a secondary ESP32-CAM module to record 30 seconds of high-quality video directly to a local SD card (bypassing Wi-Fi lag).
+* **Self-Sustaining:** Powered by Piezoelectric Energy Harvesting crystals in the sole, charging a local Li-ion battery via a BMS.
 
 ## Hardware Pinout (ESP32 Main)
-* **Button:** GPIO 22 (Internal Pullup)
-* **Buzzer:** GPIO 23
-* **GPS RX:** GPIO 16
-* **GPS TX:** GPIO 17
-* **Camera Trigger:** UDP Wireless (Port 4210)
+* **Piezo Impact Sensor:** GPIO 32
+* **Impact Indicator LED:** GPIO 25
+* **Panic Button:** GPIO 22 (Internal Pullup)
+* **Active Buzzer:** GPIO 23
+* **GPS RX:** GPIO 16 (ESP32 RX2)
+* **GPS TX:** GPIO 17 (ESP32 TX2)
+* **Camera Trigger:** UDP Wireless Broadcast (Port 4210)
 
-## How to Use
-1.  Power on the system.
-2.  Wait for the buzzer to stop "pip" beeping (indicates GPS Lock).
-3.  Press the Button (Pin 22).
-4.  **Guardian Alert** is sent via Telegram.
-5.  **Camera** starts recording.
-6.  **Buzzer** sounds continuously.
-7.  Reply "SAFE" to cancel, or wait 45s for Police Alert.
+## Operating Protocol
+1. Power on the system. The ESP32 will acquire a Wi-Fi backup location immediately.
+2. The GPS will search in the background. Core 0 arms the Piezo sensor.
+3. **Impact/Button Press:** Triggers the SOS sequence.
+4. **Guardian Alert** sent via Telegram with the best available location (GPS or Wi-Fi).
+5. **Camera** begins recording evidence.
+6. **Buzzer** sounds continuously.
+7. Reply "SAFE" on Telegram to cancel, or wait 45s for Automatic Police Alert.

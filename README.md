@@ -1,16 +1,16 @@
 # Smart Footwear Safety System 🛡️👟
 
+An advanced, IoT-based wearable safety device integrated into footwear, designed to provide immediate, failsafe assistance in emergency situations. 
+
+![WhatsApp Image 2026-03-24 at 12 08 52](https://github.com/user-attachments/assets/7637511b-55b4-4ffb-b281-d3e234ef5846)
+
+https://youtu.be/qBMRTrj5U98
 
 https://github.com/user-attachments/assets/60a631ea-56f0-48fb-ad00-363e10b8a0da
 
 
 https://github.com/user-attachments/assets/11c4666f-ae9d-4d68-956d-c3f41e0974a6
 
-
-
-[![Watch Video 1](![WhatsApp Image 2026-03-24 at 12 08 52](https://github.com/user-attachments/assets/9b0d70c2-6e8e-49da-b3e5-268459ea9d30))
-]([https://youtube.com](https://youtu.be/qBMRTrj5U98))
-An advanced, IoT-based wearable safety device integrated into footwear, designed to provide immediate, failsafe assistance in emergency situations. 
 
 ## Core Architecture
 This system utilizes **Dual-Core Processing (FreeRTOS)** on the ESP32 to ensure critical safety sensors are never blocked by network latency.
